@@ -1,1 +1,2 @@
-# multiagentsystems
+# multi agent systems 
+## practical tasks
