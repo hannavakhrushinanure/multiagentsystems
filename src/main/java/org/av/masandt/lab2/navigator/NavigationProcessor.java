@@ -58,6 +58,11 @@ public class NavigationProcessor extends CyclicBehaviour {
             ACLMessage reply = message.createReply();
             try {
                 System.out.println("[NavigationProcessor]: received message: " + message.getContent());
+
+                reply.setReplyWith(message.getReplyWith());
+                reply.setOntology(ONTOLOGY);
+                reply.setLanguage(LANGUAGE);
+
                 checkMessage(message);
 
                 if (message.getContent().equals(GAME_OVER_MSG_CONTENT)) {
@@ -65,18 +70,17 @@ public class NavigationProcessor extends CyclicBehaviour {
                     return;
                 }
 
-                reply.setReplyWith(message.getReplyWith());
-                reply.setOntology(ONTOLOGY);
-                reply.setLanguage(LANGUAGE);
-                reply.setPerformative(ACLMessage.INFORM);
                 CaveRoom receivedSenses = parseInputMessage(message.getContent());
                 WampusWorldUtils.FacingDirection directionPointer = processSenses(receivedSenses);
                 System.out.println("[NavigationProcessor]: defined move: " + directionPointer);
+
+                reply.setPerformative(ACLMessage.INFORM);
                 reply.setContent(formResponse(directionPointer));
 
             } catch (Exception e) {
                 e.printStackTrace();
                 reply.setPerformative(ACLMessage.FAILURE);
+                reply.setContent(e.getMessage());
             }
 
             System.out.println("[NavigationProcessor]: responded with: " + reply.getContent());

@@ -186,6 +186,7 @@ public class CommunicationProcessor extends Behaviour {
     }
 
     private void resendMessage() {
+        System.out.println("[CommunicationProcessor]: bad response, resending message..");
         step--;
         failed++;  // can resend MESSAGE_MAX_RESEND_TIMES times, see #done
     }

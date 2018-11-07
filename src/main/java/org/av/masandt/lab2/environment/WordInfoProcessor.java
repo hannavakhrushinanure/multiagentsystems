@@ -37,6 +37,11 @@ public class WordInfoProcessor extends CyclicBehaviour {
             ACLMessage reply = message.createReply();
             try {
                 System.out.println("[WordInfoProcessor]: received message: " + message.getContent());
+
+                reply.setReplyWith(message.getReplyWith());
+                reply.setOntology(ONTOLOGY);
+                reply.setLanguage(LANGUAGE);
+
                 checkMessage(message);
 
                 if (message.getContent().equals(GAME_OVER_MSG_CONTENT)) {
@@ -44,17 +49,16 @@ public class WordInfoProcessor extends CyclicBehaviour {
                     return;
                 }
 
-                reply.setReplyWith(message.getReplyWith());
-                reply.setOntology(ONTOLOGY);
-                reply.setLanguage(LANGUAGE);
-                reply.setPerformative(ACLMessage.INFORM);
                 PositionPointer position = parseInputMessage(message.getContent());
                 CaveRoom roomState = this.roomMap.get(position);
+
+                reply.setPerformative(ACLMessage.INFORM);
                 reply.setContent(formResponse(roomState));
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 reply.setPerformative(ACLMessage.FAILURE);
+                reply.setContent(e.getMessage());
             }
 
             System.out.println("[WordInfoProcessor]: responded with: " + reply.getContent());
